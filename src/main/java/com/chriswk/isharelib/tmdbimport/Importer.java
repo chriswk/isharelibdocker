@@ -15,6 +15,7 @@ public abstract class Importer<T extends Identifiable> {
     private static final Logger LOG = LogManager.getLogger();
     private final File cacheFolder;
     private final File localFolder;
+    private final String importObjectName;
     private final Class<T> classObject;
     ObjectMapper mapper;
     TmdbApi api;
@@ -25,10 +26,11 @@ public abstract class Importer<T extends Identifiable> {
         this.api = getProperty("TMDB_API_KEY")
                 .map(TmdbApi::new)
                 .orElseThrow(() -> new IllegalArgumentException("Missing api key"));
-        this.cacheFolder = getProperty("CACHE_FOLDER").map(File::new).orElse(new File(System.getProperty("user.home"), ".isharelibdata"));
-        this.localFolder = new File(this.cacheFolder, this.getClass().getName().toLowerCase());
-        this.localFolder.mkdirs();
         this.classObject = type;
+        this.importObjectName = classObject.getSimpleName();
+        this.cacheFolder = getProperty("CACHE_FOLDER").map(File::new).orElse(new File(System.getProperty("user.home"), ".isharelibdata"));
+        this.localFolder = new File(this.cacheFolder, classObject.getSimpleName());
+        this.localFolder.mkdirs();
     }
 
     public void cacheObject(T t) {
@@ -36,7 +38,7 @@ public abstract class Importer<T extends Identifiable> {
         try {
             mapper.writeValue(new File(localFolder, path), t);
         } catch (IOException e) {
-            LOG.error("Could not cache object " +t, e);
+            LOG.error("Could not cache " +importObjectName +" [ " +t +"]", e);
         }
     }
 
@@ -46,7 +48,7 @@ public abstract class Importer<T extends Identifiable> {
         try {
             return mapper.readValue(new File(localFolder, path), classObject);
         } catch (IOException e) {
-            LOG.error("Could not get movie with id: " + id, e);
+            LOG.error("Could not get " + importObjectName + " with id: " + id, e);
         }
         return null;
     }

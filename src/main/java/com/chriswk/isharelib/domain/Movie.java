@@ -5,10 +5,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 
 public class Movie extends Identifiable {
     private static final Logger LOG = LogManager.getLogger();
@@ -79,14 +77,6 @@ public class Movie extends Identifiable {
         this.releaseDate = releaseDate;
     }
 
-    private LocalDateTime getDate(String dateString) {
-        try {
-            return LocalDate.parse(dateString, bdayFormatter).atStartOfDay();
-        } catch (DateTimeParseException e) {
-            LOG.warn("Failed to parse dateString: {}", dateString);
-        }
-        return null;
-    }
 
     @Override
     public String toString() {

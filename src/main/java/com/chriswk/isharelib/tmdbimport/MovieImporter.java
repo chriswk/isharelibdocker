@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MovieImporter extends Importer<Movie> {
-    public MovieImporter(Class<Movie> type) {
-        super(type);
+    public MovieImporter() {
+        super(Movie.class);
     }
 
     @Override

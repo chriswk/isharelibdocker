@@ -5,16 +5,13 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 
 
 public class Person extends Identifiable {
     private static final Logger LOG = LogManager.getLogger();
-    private static final DateTimeFormatter bdayFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private String name;
     private List<String> aliases;
     private String biography;
@@ -103,15 +100,6 @@ public class Person extends Identifiable {
 
     public void setImdbId(String imdbId) {
         this.imdbId = imdbId;
-    }
-
-    private LocalDateTime getDate(String dateString) {
-        try {
-            return LocalDate.parse(dateString, bdayFormatter).atStartOfDay();
-        } catch (DateTimeParseException e) {
-            LOG.warn("Failed to parse dateString: {}", dateString);
-        }
-        return null;
     }
 
     @Override
