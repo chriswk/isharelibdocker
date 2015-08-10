@@ -1,0 +1,11 @@
+build
+*.log
+.idea
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+testDataDir*
+.gradle
+neo4jdb
