@@ -24,7 +24,7 @@ dependencies {
     compile 'info.movito:themoviedbapi:1.1'
     compile "com.fasterxml.jackson.core:jackson-core:2.6.1"
     compile "com.fasterxml.jackson.core:jackson-databind:2.6.1"
-    compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.6.1"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.9.9"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.6.1"
     compile 'org.slf4j:slf4j-api:1.7.12'
     compile 'org.apache.logging.log4j:log4j-api:2.3'
