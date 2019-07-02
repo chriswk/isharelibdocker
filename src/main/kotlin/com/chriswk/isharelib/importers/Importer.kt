@@ -2,17 +2,19 @@ package com.chriswk.isharelib.importers
 
 import com.chriswk.isharelib.Configuration
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import info.movito.themoviedbapi.TmdbApi
 import info.movito.themoviedbapi.model.MovieDb
 import info.movito.themoviedbapi.model.people.PersonPeople
 import info.movito.themoviedbapi.model.tv.TvSeries
 import mu.KotlinLogging
 import java.io.File
+import java.io.InputStream
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-
 val logger = KotlinLogging.logger {}
+
 abstract class Importer<T : Identifiable>(val type: Class<T>) {
     companion object {
         private val config = Configuration()
@@ -20,6 +22,7 @@ abstract class Importer<T : Identifiable>(val type: Class<T>) {
     }
 
     private val localFolder: File = File(config.cacheFolder, type.simpleName)
+
     init {
         localFolder.mkdirs()
     }
@@ -30,7 +33,9 @@ abstract class Importer<T : Identifiable>(val type: Class<T>) {
         val path = "${t.id}.json"
         runCatching {
             objectMapper.writeValue(File(localFolder, path), t)
-        }.fold(onSuccess = { success -> logger.info("Cached ${t.id}") }, onFailure = { failure -> logger.warn("Could not cache ${t.id}", failure)})
+        }.fold(
+            onSuccess = { logger.info("Cached ${t.id}") },
+            onFailure = { failure -> logger.warn("Could not cache ${t.id}", failure) })
     }
 
     fun getCachedObject(id: Long): T? {
@@ -47,13 +52,12 @@ abstract class Importer<T : Identifiable>(val type: Class<T>) {
         val obj = getCachedObject(id) ?: apiCall(id)
         if (obj != null) {
             cacheObject(obj)
-            logger.info("Cached to ${localFolder}/${id}.json")
+            logger.info("Cached to $localFolder/$id.json")
         }
         return obj
     }
 
     abstract fun apiCall(id: Long): T?
-
 }
 
 class MovieImporter : Importer<Movie>(Movie::class.java) {
@@ -76,14 +80,16 @@ class SeriesImporter : Importer<Series>(Series::class.java) {
     }
 }
 
-data class Person(override val id: Long,
-                  val name: String,
-                  val aliases: List<String> = emptyList(),
-                  val biography: String,
-                  val birthDate: LocalDate?,
-                  val birthPlace: String,
-                  val deathDate: LocalDate? = null,
-                  val imdbId: String) : Identifiable(id) {
+data class Person(
+    override val id: Long,
+    val name: String,
+    val aliases: List<String> = emptyList(),
+    val biography: String,
+    val birthDate: LocalDate?,
+    val birthPlace: String,
+    val deathDate: LocalDate? = null,
+    val imdbId: String
+) : Identifiable(id) {
     companion object {
         fun fromApiCall(tmdbPerson: PersonPeople): Person {
             return Person(
@@ -100,13 +106,16 @@ data class Person(override val id: Long,
     }
 }
 
-data class Movie(override val id: Long,
-                 val title: String,
-                 val imdbId: String,
-                 val budget: Long,
-                 val overview: String,
-                 val releaseDate: String): Identifiable(id) {
+data class Movie(
+    override val id: Long,
+    val title: String,
+    val imdbId: String,
+    val budget: Long,
+    val overview: String,
+    val releaseDate: String
+) : Identifiable(id) {
     companion object {
+        val objectMapper = jacksonObjectMapper()
         fun fromApiCall(tmdbMovie: MovieDb): Movie {
             return Movie(
                 id = tmdbMovie.id.toLong(),
@@ -117,15 +126,21 @@ data class Movie(override val id: Long,
                 releaseDate = tmdbMovie.releaseDate
             )
         }
+
+        fun fromFile(fileName: String): Movie? {
+            return fileName.toInputStream()?.let { objectMapper.readValue(it) }
+        }
     }
 }
 
-data class Series(override val id: Long,
-                  val numberOfEpisodes: Int,
-                  val numberOfSeasons: Int,
-                  val firstAirDate: LocalDate? = null,
-                  val name: String,
-                  val originalName: String?) : Identifiable(id) {
+data class Series(
+    override val id: Long,
+    val numberOfEpisodes: Int,
+    val numberOfSeasons: Int,
+    val firstAirDate: LocalDate? = null,
+    val name: String,
+    val originalName: String?
+) : Identifiable(id) {
     companion object {
         fun fromApiCall(series: TvSeries): Series {
             return Series(
@@ -139,6 +154,7 @@ data class Series(override val id: Long,
         }
     }
 }
+
 open class Identifiable(open val id: Long)
 
 val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
@@ -149,4 +165,8 @@ fun String.getDate(): LocalDate? {
         onSuccess = { success -> success },
         onFailure = { failure -> logger.warn("Failed to parse date $this", failure); return null }
     )
+}
+
+fun String.toInputStream(): InputStream? {
+    return Importer::class.java.classLoader.getResourceAsStream(this)
 }

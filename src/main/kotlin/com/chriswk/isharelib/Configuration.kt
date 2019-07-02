@@ -35,7 +35,6 @@ private val prodProperties = ConfigurationMap(
     )
 )
 
-
 data class Configuration(
     val httpPort: Int = config()[Key("port", intType)],
     val profile: Profile = config()[Key("application.profile", stringType)].let { Profile.valueOf(it) },
@@ -47,11 +46,11 @@ enum class Profile {
     LOCAL, DEV, PROD
 }
 
-fun getEnvOrProp(propName: String) : String? {
+fun getEnvOrProp(propName: String): String? {
     return System.getenv(propName) ?: System.getProperty(propName)
 }
 
-private fun config() = when(getEnvOrProp("PROFILE")) {
+private fun config() = when (getEnvOrProp("PROFILE")) {
     "dev" -> ConfigurationProperties.systemProperties() overriding EnvironmentVariables overriding devProperties
     "prod" -> ConfigurationProperties.systemProperties() overriding EnvironmentVariables overriding prodProperties
     else -> ConfigurationProperties.systemProperties() overriding EnvironmentVariables overriding localProperties
