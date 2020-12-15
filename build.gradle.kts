@@ -31,7 +31,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.9")
 
     // Moviedb
-    implementation("info.movito:themoviedbapi:1.9")
+    implementation("info.movito:themoviedbapi:1.10")
 
     // Configuration
     implementation("com.natpryce:konfig:1.6.10.0")
