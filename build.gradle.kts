@@ -37,7 +37,7 @@ dependencies {
     implementation("com.natpryce:konfig:1.6.10.0")
 
     // Logging
-    implementation("io.github.microutils:kotlin-logging:1.6.22")
+    implementation("io.github.microutils:kotlin-logging:2.0.4")
     implementation("org.apache.logging.log4j:log4j-api:2.12.0")
     implementation("org.apache.logging.log4j:log4j-core:2.12.0")
     implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.12.0")
