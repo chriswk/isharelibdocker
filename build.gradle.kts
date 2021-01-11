@@ -28,7 +28,7 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
 
     // Serialization
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.9")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.1")
 
     // Moviedb
     implementation("info.movito:themoviedbapi:1.9")
