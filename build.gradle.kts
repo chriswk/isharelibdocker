@@ -41,7 +41,7 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-api:2.12.0")
     implementation("org.apache.logging.log4j:log4j-core:2.12.0")
     implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.12.0")
-    implementation("com.vlkan.log4j2:log4j2-logstash-layout-fatjar:0.15")
+    implementation("com.vlkan.log4j2:log4j2-logstash-layout-fatjar:1.0.5")
 
     // Use the Kotlin test library.
     testImplementation(kotlin("test"))
