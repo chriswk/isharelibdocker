@@ -39,7 +39,7 @@ dependencies {
     // Logging
     implementation("io.github.microutils:kotlin-logging:1.6.22")
     implementation("org.apache.logging.log4j:log4j-api:2.12.0")
-    implementation("org.apache.logging.log4j:log4j-core:2.12.0")
+    implementation("org.apache.logging.log4j:log4j-core:2.14.1")
     implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.12.0")
     implementation("com.vlkan.log4j2:log4j2-logstash-layout-fatjar:0.15")
 
