@@ -13,7 +13,7 @@ plugins {
 
     // Apply the application plugin to add support for building a CLI application.
     application
-    id("com.diffplug.gradle.spotless") version "3.23.0"
+    id("com.diffplug.gradle.spotless") version "5.12.1"
     id("com.github.johnrengelman.shadow") version "4.0.3"
 }
 
